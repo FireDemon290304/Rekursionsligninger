@@ -43,7 +43,7 @@ class Rekursion
         }
     }
 
-    (string, float, int) GetInp()
+    static (string, float, int) GetInp()
     {
         Console.WriteLine("Accepted variables:\n\ty_n\n\tn\n");
 
