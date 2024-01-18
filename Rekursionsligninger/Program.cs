@@ -15,6 +15,8 @@ class Rekursion
     int Iter;
 
     Expr eq;
+    Expr a;
+
     Dictionary<string, FloatingPoint> Variables;
 
     public Rekursion()
@@ -22,24 +24,28 @@ class Rekursion
         (Ligning, y0, Iter) = GetInp();
 
         eq = Expr.Parse(Ligning);
-        Variables = new() { { "y_n", y0 }, { "n", -1 } };
+
+        Variables = new() { { "y_n", y0 }, { "n", 0 } };
 
         Console.WriteLine($"\nEquation: {Ligning}");
 
-        Console.WriteLine($"\t\ty_0: {y0}");
-        foreach ((int iteration, Expr item) in Test(y0).Select((value, index) => (index, value)))
-        { Console.WriteLine($"n = {iteration},\t\ty_{iteration + 1}: {item.RealNumberValue}"); }
+        Console.WriteLine($"\t\ty_0:\t{y0}");
+        foreach ((int iteration, Expr item) in Test().Select((value, index) => (index, value)))
+        { Console.WriteLine($"n = {iteration},\t\ty_{iteration + 1}:\t{item.RealNumberValue}"); }
 
         Console.Write("..."); Console.ReadLine();                       // Out
     }
 
-    IEnumerable<Expr> Test(float y_n)
+    IEnumerable<Expr> Test()
     {
-        for (int n = 0; n < Iter; n++)      // TODO: Add conditions for iteration like while y_n < 3
+        int n = 0;
+        while (n < Iter)      // TODO: Add conditions for iteration like while y_n < 3
         {
+            // y_n=-1+(1+h)^n does not work for some reason
             Variables["n"] = n;                                         // Assign current 'n'
             Variables["y_n"] = eq.Evaluate(Variables);                  // Assign new y0 based on res from current
             yield return Variables["y_n"].RealValue;                    // Return new value of y0
+            n++;
         }
     }
 
