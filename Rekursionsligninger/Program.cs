@@ -34,7 +34,7 @@ class Rekursion
 
     IEnumerable<Expr> Test(float y_n)
     {
-        for (int n = 0; n < Iter; n++)
+        for (int n = 0; n < Iter; n++)      // TODO: Add conditions for iteration like while y_n < 3
         {
             Variables["n"] = n;                                         // Assign current 'n'
             Variables["y_n"] = eq.Evaluate(Variables);                  // Assign new y0 based on res from current
