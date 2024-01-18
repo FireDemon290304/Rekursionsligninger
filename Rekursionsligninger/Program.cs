@@ -24,8 +24,9 @@ class Rekursion
         eq = Expr.Parse(Ligning);
         Variables = new() { { "y_n", y0 }, { "n", -1 } };
 
-        Console.WriteLine($"\ny0 = {y0},\t\t{Ligning}\n");
+        Console.WriteLine($"\nEquation: {Ligning}");
 
+        Console.WriteLine($"\t\ty_0: {y0}");
         foreach ((int iteration, Expr item) in Test(y0).Select((value, index) => (index, value)))
         { Console.WriteLine($"n = {iteration},\t\ty_{iteration + 1}: {item.RealNumberValue}"); }
 
