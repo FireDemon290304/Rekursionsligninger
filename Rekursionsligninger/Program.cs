@@ -27,7 +27,7 @@ class Rekursion
         Console.WriteLine($"\ny0 = {y0},\t\t{Ligning}\n");
 
         foreach ((int iteration, Expr item) in Test(y0).Select((value, index) => (index, value)))
-        { Console.WriteLine($"n = {iteration},\t\ty_{iteration}: {item.RealNumberValue}"); }
+        { Console.WriteLine($"n = {iteration},\t\ty_{iteration + 1}: {item.RealNumberValue}"); }
 
         Console.Write("..."); Console.ReadLine();                       // Out
     }
