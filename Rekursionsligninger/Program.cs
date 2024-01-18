@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Runtime.Versioning;
 using MathNet.Symbolics;
 using Expr = MathNet.Symbolics.SymbolicExpression;
@@ -16,24 +17,22 @@ class Rekursion
     Expr eq;
     Dictionary<string, FloatingPoint> Variables;
 
-    bool Cont;
-
     public Rekursion()
     {
         (Ligning, y0, Iter) = GetInp();
-        
+
         eq = Expr.Parse(Ligning);
-        Variables = new() { { "y_n", y0}, { "n", -1} };
-        
+        Variables = new() { { "y_n", y0 }, { "n", -1 } };
+
         Console.WriteLine($"\ny0 = {y0},\t\t{Ligning}\n");
 
-        foreach ((int iteration, Expr item) in Test().Select((value, index) => (index, value)))
+        foreach ((int iteration, Expr item) in Test(y0).Select((value, index) => (index, value)))
         { Console.WriteLine($"n = {iteration},\t\ty_{iteration}: {item.RealNumberValue}"); }
 
         Console.Write("..."); Console.ReadLine();                       // Out
     }
 
-    IEnumerable<Expr> Test()
+    IEnumerable<Expr> Test(float y_n)
     {
         for (int n = 0; n < Iter; n++)
         {
@@ -51,7 +50,7 @@ class Rekursion
         string inp = Console.ReadLine() ?? "";
 
         Console.Write("Beginning condition [y_0]: ");
-        float initial = float.Parse(Console.ReadLine() ?? "-1");
+        float initial = float.Parse(Console.ReadLine() ?? "-1", CultureInfo.InvariantCulture);
 
         Console.Write("Iterations [int > 0]: ");
         int iterations = int.Parse(Console.ReadLine() ?? "-1");
