@@ -13,7 +13,7 @@ class Rekursion
     readonly string Ligning;
     readonly FloatingPoint y0;
     readonly int Iter;
-    const float Tolerance = 1e-6f; // Set the tolerance for considering values equal
+    const float Tolerance = 1e-16f; // Set the tolerance for considering values equal
 
     readonly Expr eq;
 
@@ -104,7 +104,7 @@ class Rekursion
         string inp = Console.ReadLine() ?? "";
 
         Console.Write("Beginning condition [y_0]: ");
-        FloatingPoint initial = float.Parse(Console.ReadLine() ?? "-1", CultureInfo.InvariantCulture);
+        FloatingPoint initial = Expr.Parse(Console.ReadLine() ?? "-1").RealNumberValue;
 
         Console.Write("Iterations or condition [int or bool expression]: ");
         var iterOrCondition = Console.ReadLine() ?? "";
