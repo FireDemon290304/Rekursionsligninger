@@ -11,7 +11,7 @@ class Program { static void Main() { Rekursion _ = new(); } }           // In
 class Rekursion
 {
     readonly string Ligning;
-    readonly float y0;
+    readonly FloatingPoint y0;
     readonly int Iter;
     const float Tolerance = 1e-6f; // Set the tolerance for considering values equal
 
@@ -29,35 +29,35 @@ class Rekursion
 
         Console.WriteLine($"\nEquation: {Ligning}");
 
-        Console.WriteLine($"\t\ty_0:\t{y0}");
-        foreach ((int iteration, Expr item) in Test(isCondition, condition).Select((value, index) => (index, value)))
-        { Console.WriteLine($"n = {iteration},\t\ty_{iteration + 1}:\t{item.RealNumberValue}"); }
+        Console.WriteLine($"\t\ty_0:\t{y0.RealValue}");
+        foreach ((int iteration, FloatingPoint item) in Test(isCondition, condition).Select((value, index) => (index, value)))
+        { Console.WriteLine($"n = {iteration},\t\ty_{iteration + 1}:\t{item.RealValue}"); }
 
         Console.Write("..."); Console.ReadLine();                       // Out
     }
 
-    IEnumerable<Expr> Test(bool isCondition, string? condition)
+    IEnumerable<FloatingPoint> Test(bool isCondition, string? condition)
     {
         int n = 0;
-        float currentY = y0;
-        float nextY;
+        FloatingPoint currentY = y0;
+        FloatingPoint nextY;
 
         while (isCondition ? EvalCondition(condition) : n < Iter)      // TODO: Add conditions for iteration like while y_n < 3
         {
             Variables["n"] = n;                                         // Assign current 'n'
             Variables["y_n"] = eq.Evaluate(Variables);                  // Assign new y0 based on res from current  
             
-            nextY = (float)Variables["y_n"].RealValue;
+            nextY = Variables["y_n"].RealValue;
 
             yield return nextY;
 
             // Check if the current and next values are approximately equal
-            if (Math.Abs(nextY - currentY) < Tolerance)
-            {
-                // Terminate the loop if they are approximately equal
-                Console.WriteLine("Terms y_(n+1) and y_n are approximately equal. Terminating loop");
-                break;
-            }
+            //if (Math.Abs(nextY - currentY) < Tolerance)
+            //{
+            //    // Terminate the loop if they are approximately equal
+            //    Console.WriteLine("Terms y_(n+1) and y_n are approximately equal. Terminating loop");
+            //    break;
+            //}
 
             currentY = nextY;
             n++;
@@ -72,14 +72,14 @@ class Rekursion
         // This sets up the parameter 'y_n' for the Dynamic LINQ library
         var parameters = new ParameterExpression[]
         {
-            System.Linq.Expressions.Expression.Parameter(typeof(float), "y_n")
+            System.Linq.Expressions.Expression.Parameter(typeof(FloatingPoint), "y_n")
         };
 
         // This is a scope that provides variable names and their values to Dynamic LINQ
-        Dictionary<string, float> values = new() { { "y_n", (float)Variables["y_n"].RealValue } };
+        Dictionary<string, FloatingPoint> values = new() { { "y_n", Variables["y_n"].RealValue } };
 
         // Parsing and executing the dynamic expression
-        var dynamicCondition = DynamicExpressionParser.ParseLambda(
+        Delegate? dynamicCondition = DynamicExpressionParser.ParseLambda(
             parameters,
             typeof(bool),
             condition,
@@ -88,11 +88,11 @@ class Rekursion
 
         // Invoke the compiled lambda expression
 #pragma warning disable CS8605
-        return (bool)dynamicCondition.DynamicInvoke((float)Variables["y_n"].RealValue);
+        return (bool)dynamicCondition.DynamicInvoke(Variables["y_n"].RealValue);
 #pragma warning restore CS8605
     }
 
-    static (string, float, int) GetInp(out bool isCondition, out string? condition)
+    static (string, FloatingPoint, int) GetInp(out bool isCondition, out string? condition)
     {
         // Default to null, indicating no condition
         isCondition = false;
@@ -104,7 +104,7 @@ class Rekursion
         string inp = Console.ReadLine() ?? "";
 
         Console.Write("Beginning condition [y_0]: ");
-        float initial = float.Parse(Console.ReadLine() ?? "-1", CultureInfo.InvariantCulture);
+        FloatingPoint initial = float.Parse(Console.ReadLine() ?? "-1", CultureInfo.InvariantCulture);
 
         Console.Write("Iterations or condition [int or bool expression]: ");
         var iterOrCondition = Console.ReadLine() ?? "";
