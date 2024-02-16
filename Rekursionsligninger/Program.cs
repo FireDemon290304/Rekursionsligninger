@@ -27,7 +27,7 @@ class Rekursion
 
         Variables = new() { { "y_n", y0 }, { "n", 0 } };
 
-        Console.WriteLine($"\nEquation: {Ligning}");
+        Console.WriteLine($"\nEquation: {eq}");
 
         Console.WriteLine($"\t\ty_0:\t{y0.RealValue}");
         foreach ((int iteration, FloatingPoint item) in Test(isCondition, condition).Select((value, index) => (index, value)))
@@ -46,9 +46,15 @@ class Rekursion
         {
             Variables["n"] = n;                                         // Assign current 'n'
             Variables["y_n"] = eq.Evaluate(Variables);                  // Assign new y0 based on res from current  
-            
-            nextY = Variables["y_n"].RealValue;
-
+            try
+            {
+                nextY = Variables["y_n"].RealValue;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                break;
+            }
             yield return nextY;
 
             // Check if the current and next values are approximately equal
@@ -61,6 +67,7 @@ class Rekursion
 
             currentY = nextY;
             n++;
+
         }
     }
 
